@@ -419,28 +419,27 @@ module Google
     # Create a new event from a google 'entry'
     #
     def self.new_from_feed(e, calendar) #:nodoc:
-      Event.new(:id           => e['id'],
-                :calendar     => calendar,
-                :status       => e['status'],
-                :raw          => e,
-                :title        => e['summary'],
-                :description  => e['description'],
-                :location     => e['location'],
-                :creator      => e['creator'],
-                :start_time   => Event.parse_json_time(e['start']),
-                :end_time     => Event.parse_json_time(e['end']),
-                :transparency => e['transparency'],
-                :html_link    => e['htmlLink'],
-                :updated      => e['updated'],
-                :reminders    => e['reminders'],
-                :attendees    => e['attendees'],
-                :recurrence   => Event.parse_recurrence_rule(e['recurrence']),
-                :visibility   => e['visibility'],
-                :color_id     => e['colorId'],
-                :extended_properties => e['extendedProperties'],
-                :guests_can_invite_others => e['guestsCanInviteOthers'],
-                :guests_can_see_other_guests => e['guestsCanSeeOtherGuests'])
-
+        Event.new(:id           => e['id'],
+                  :calendar     => calendar,
+                  :status       => e['status'],
+                  :raw          => e,
+                  :title        => e['summary'],
+                  :description  => e['description'],
+                  :location     => e['location'],
+                  :creator      => e['creator'],
+                  :start_time   => Event.parse_json_time(e['start']),
+                  :end_time     => Event.parse_json_time(e['end']),
+                  :transparency => e['transparency'],
+                  :html_link    => e['htmlLink'],
+                  :updated      => e['updated'],
+                  :reminders    => e['reminders'],
+                  :attendees    => e['attendees'],
+                  :recurrence   => Event.parse_recurrence_rule(e['recurrence']),
+                  :visibility   => e['visibility'],
+                  :color_id     => e['colorId'],
+                  :extended_properties => e['extendedProperties'],
+                  :guests_can_invite_others => e['guestsCanInviteOthers'],
+                  :guests_can_see_other_guests => e['guestsCanSeeOtherGuests'])
     end
 
     #
@@ -450,7 +449,7 @@ module Google
     def self.parse_recurrence_rule(recurrence_entry)
       return {} unless recurrence_entry && recurrence_entry != []
 
-      rrule = recurrence_entry[0].sub('RRULE:', '')
+      rrule = recurrence_entry.select{ |entry| entry.include?('RRULE:') }[0].sub('RRULE:', '')
       rhash = Hash[*rrule.downcase.split(/[=;]/)]
 
       rhash[:until] = Time.parse(rhash[:until]) if rhash[:until]
